@@ -133,3 +133,11 @@ class MultiheadAttention(metaclass=SubclassMeta):
     __subclass__ = (
         torch.nn.MultiheadAttention,
     )
+
+
+class LayerNorm(metaclass=SubclassMeta):
+    '''Abstract base class that describes layer normalization modules.'''
+
+    __subclass__ = (
+        torch.nn.LayerNorm,
+    )
