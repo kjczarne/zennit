@@ -125,3 +125,11 @@ class Activation(metaclass=SubclassMeta):
         torch.nn.modules.activation.Tanhshrink,
         torch.nn.modules.activation.Threshold,
     )
+
+
+class MultiheadAttention(metaclass=SubclassMeta):
+    '''Abstract base class that describes multihead self-attention modules.'''
+
+    __subclass__ = (
+        torch.nn.MultiheadAttention,
+    )
