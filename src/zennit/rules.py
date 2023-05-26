@@ -436,3 +436,35 @@ class ReLUBetaSmooth(Hook):
     def backward(self, module, grad_input, grad_output):
         '''Modify ReLU gradient to the smooth softplus gradient :cite:p:`dombrowski2019explanations`.'''
         return (torch.sigmoid(self.beta_smooth * self.stored_tensors['input'][0]) * grad_output[0],)
+
+
+class AHConservative(Hook):
+    # TODO: docstrings
+
+    def __init__(self):
+        super().__init__()
+
+    def copy(self):
+        return self.__class__()
+
+    def forward(self, module, input, output):
+        pass  # TODO: implement fwd AH conservative
+
+    def backward(self, module, grad_input, grad_output):
+        pass  # TODO: implement backward AH conservative
+
+
+class LNConservative(Hook):
+    # TODO: docstrings
+
+    def __init__(self):
+        super().__init__()
+
+    def copy(self):
+        return self.__class__()
+
+    def forward(self, module, input, output):
+        pass  # TODO: implement fwn LN conservative
+
+    def backward(self, module, grad_input, grad_output):
+        pass  # TODO: implement backward LN Conservative

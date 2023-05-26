@@ -21,7 +21,7 @@ import torch
 from .core import Composite
 from .layer import Sum
 from .rules import Gamma, Epsilon, ZBox, ZPlus, AlphaBeta, Flat, Pass, Norm
-from .rules import ReLUDeconvNet, ReLUGuidedBackprop, ReLUBetaSmooth
+from .rules import ReLUDeconvNet, ReLUGuidedBackprop, ReLUBetaSmooth, AHConservative, LNConservative
 from .types import Convolution, Linear, AvgPool, Activation, BatchNorm, MultiheadAttention, LayerNorm
 
 
@@ -586,8 +586,8 @@ class Transformer(LayerMapComposite):
         layer_map += [(Activation, Pass()),
                       (Convolution, ZPlus()),
                       (AvgPool, Norm()),
-                      (MultiheadAttention, AHConservative()),  # TODO: implement the CLRP rule for the multihead attention layer
-                      (LayerNorm, LNConservative()), # TODO: implement the Layer Normalization CLRP rule
+                      (MultiheadAttention, AHConservative()),
+                      (LayerNorm, LNConservative()),
                       (Linear, Epsilon(epsilon=linear_layer_epsilon))]
 
         super().__init__(layer_map=layer_map, canonizers=canonizers)
