@@ -439,8 +439,9 @@ class ReLUBetaSmooth(Hook):
 
 
 class AHConservative(Hook):
-    # TODO: docstrings
-
+    '''Implements Attention Head Conservative Layerwise Relevance Propagation
+    Rule :cite:p:`ali2022clrp`.
+    '''
     def __init__(self):
         super().__init__()
 
@@ -448,23 +449,44 @@ class AHConservative(Hook):
         return self.__class__()
 
     def forward(self, module, input, output):
-        pass  # TODO: implement fwd AH conservative
+        '''Call detach on the last node in the computational graph
+        :cite:p:`ali2022clrp`'''
+        # self.stored_tensors['input'] = input
+        output.detach()
+        return output
 
     def backward(self, module, grad_input, grad_output):
-        pass  # TODO: implement backward AH conservative
+        '''Returns the gradient for Query, Key and Value matrices'''
+        grad_query = grad_output[0][0]
+        grad_key = grad_output[0][1]
+        grad_value = grad_output[0][2]
+        return grad_query, grad_key, grad_value
 
 
 class LNConservative(Hook):
-    # TODO: docstrings
+    '''Implements Layer Normalization Conservative Layerwise Relevance Propagation
+    :cite:p:`ali2022clrp`'''
 
-    def __init__(self):
+    def __init__(self, epsilon):
+        self.epsilon = epsilon
         super().__init__()
 
     def copy(self):
-        return self.__class__()
+        c = self.__class__(self.epsilon)
+        c.stored_tensors = self.stored_tensors
+        return c
 
     def forward(self, module, input, output):
-        pass  # TODO: implement fwn LN conservative
+        '''Call detach on the denominator of the Layer Normalization layer
+        :cite:p:`ali2022clrp`'''
+        if type(input) is tuple:
+            input = input[0]
+        # As described by Ali, we call `.detach()` on the denominator
+        # of the Layer Normalization `.forward()` method:
+        ln_output = torch.divide(input - torch.mean(input),
+                                 torch.sqrt(self.epsilon + torch.var(input)).detach())
+
+        return ln_output
 
     def backward(self, module, grad_input, grad_output):
-        pass  # TODO: implement backward LN Conservative
+        return grad_output
