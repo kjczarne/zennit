@@ -384,6 +384,8 @@ class Hook:
         def wrapper(grad_input, grad_output):
             hook = hook_ref()
             if hook is not None and hook.active:
+                if not hasattr(hook.stored_tensors, 'grad_output'):
+                    return hook.backward(module, grad_input, grad_output)
                 return hook.backward(module, grad_input, hook.stored_tensors['grad_output'])
             return None
 
