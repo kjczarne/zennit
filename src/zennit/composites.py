@@ -579,7 +579,7 @@ class BetaSmooth(LayerMapComposite):
 @register_composite('transformer')
 class Transformer(LayerMapComposite):
 
-    def __init__(self, linear_layer_epsilon=1e-6, layer_map=None, canonizers=None):
+    def __init__(self, linear_layer_epsilon=1e-6, layer_norm_epsilon=1e-5, layer_map=None, canonizers=None):
         if layer_map is None:
             layer_map = []
 
@@ -587,7 +587,7 @@ class Transformer(LayerMapComposite):
                       (Convolution, ZPlus()),
                       (AvgPool, Norm()),
                       (MultiheadAttention, AHConservative()),
-                      (LayerNorm, LNConservative()),
+                      (LayerNorm, LNConservative(epsilon=layer_norm_epsilon)),
                       (Linear, Epsilon(epsilon=linear_layer_epsilon))]
 
         super().__init__(layer_map=layer_map, canonizers=canonizers)
