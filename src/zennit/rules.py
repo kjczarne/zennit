@@ -457,9 +457,7 @@ class AHConservative(Hook):
 
     def backward(self, module, grad_input, grad_output):
         '''Returns the gradient for Query, Key and Value matrices'''
-        grad_query = grad_output[0][0]
-        grad_key = grad_output[0][1]
-        grad_value = grad_output[0][2]
+        grad_query, grad_key, grad_value = grad_output[0]
         return grad_query, grad_key, grad_value
 
 
